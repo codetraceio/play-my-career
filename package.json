@@ -1,0 +1,27 @@
+{
+  "name": "play-my-career",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:codetraceio/play-my-career.git",
+  "author": "omegascorp <omegascorp@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "watch": "webpack --mode=development",
+    "start": "http-server",
+    "dev": "concurrently \"yarn watch\" \"yarn start\""
+  },
+  "dependencies": {
+    "phaser": "^3.22.0",
+    "querystring-es3": "^0.2.1"
+  },
+  "devDependencies": {
+    "cache-loader": "^4.1.0",
+    "concurrently": "^5.1.0",
+    "http-server": "^0.12.1",
+    "terser-webpack-plugin": "^2.3.5",
+    "ts-loader": "^6.2.1",
+    "typescript": "^3.7.5",
+    "webpack": "^4.41.6",
+    "webpack-cli": "^3.3.11"
+  }
+}
