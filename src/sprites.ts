@@ -1,5 +1,6 @@
 export enum sprites {
   tailGroundGrass = "tail-ground-grass",
+  tailBrick = "tail-brick",
   characterAlienGreen = "character-alien-green",
 };
 

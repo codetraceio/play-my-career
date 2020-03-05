@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "phaser": "^3.22.0",
+    "phaser-slopes": "^0.1.1",
     "querystring-es3": "^0.2.1"
   },
   "devDependencies": {

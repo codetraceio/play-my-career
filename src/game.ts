@@ -37,11 +37,11 @@ function create (scene: Phaser.Scene) {
   createBorders(scene, horizontalCount, verticalCount);
 
 
-  for (let i = 0; i < horizontalCount; i++) {
-    for (let j = verticalCount - 2; j > 0; j--) {
+  for (let i = 1; i < horizontalCount - 1; i++) {
+    for (let j = verticalCount - 2; j > 1; j--) {
       const probability = i < 10 && j < yMedian ? 0 : Math.max(j / verticalCount - .10, 0);
       if (Math.random() < probability) {
-        createTail(scene, i, j);
+        createTail(scene, sprites.tailGroundGrass, i, j);
       }
     }
   }
@@ -80,6 +80,3 @@ const game = new Phaser.Game({
     },
   }
 });
-
-game.time.advancedTiming = true;
-
