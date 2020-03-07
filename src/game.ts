@@ -1,10 +1,10 @@
 import * as Phaser from "phaser";
 import { sprites, spritesheet } from "./sprites";
 import { config } from "./config";
-import { createTail } from "./tail";
 import { createPlayer, movePlayer } from "./character";
 import { state } from "./state";
 import { createBorders } from "./borders";
+import { createRandomBlock } from "./blocks";
 
 function preload(scene: Phaser.Scene) {
   Object.values(sprites).forEach((key) => {
@@ -23,28 +23,31 @@ function preload(scene: Phaser.Scene) {
 function create (scene: Phaser.Scene) {
   state.platforms = scene.physics.add.staticGroup();
   state.camera = scene.cameras.main;
-  //state.camera.setViewport(0, 0, 2000, 2000);
-  //state.camera.setPosition(-100, -100);
-  const verticalCount = 20;
-  const horizontalCount = 1000;
+  const verticalCount = config.verticalCount;
+  const horizontalCount = config.horizontalCount;
   scene.physics.world.setBounds(0, 0, horizontalCount * 64, verticalCount * 64);
 
-  const tailSize = config.tailSize;
-  const xCount = Math.ceil(window.innerWidth / tailSize);
-  const yCount = Math.ceil(window.innerHeight / tailSize);
-  const yMedian = Math.round(yCount / 2) + 1;
+  const yMedian = verticalCount / 2;
 
   createBorders(scene, horizontalCount, verticalCount);
 
-
-  for (let i = 1; i < horizontalCount - 1; i++) {
-    for (let j = verticalCount - 2; j > 1; j--) {
-      const probability = i < 10 && j < yMedian ? 0 : Math.max(j / verticalCount - .10, 0);
-      if (Math.random() < probability) {
-        createTail(scene, sprites.tailGroundGrass, i, j);
-      }
+  for (let i = 0; i < horizontalCount/8 - 1; i++) {
+    for (let j = 0; j < verticalCount/4 - 1; j++) {
+      const leftBlock = state.map.get(`${i-1}-${j}`);
+      const topBlock = state.map.get(`${i}-${j-1}`);
+      const block = createRandomBlock(scene, 1 + i * 8, 1 + j * 4, leftBlock, topBlock);
+      state.map.set(`${i}-${j}`, block);
     }
   }
+
+  // for (let i = 1; i < horizontalCount - 1; i++) {
+  //   for (let j = verticalCount - 2; j > 1; j--) {
+  //     const probability = i < 10 && j < yMedian ? 0 : Math.max(j / verticalCount - .10, 0);
+  //     if (Math.random() < probability) {
+  //       createTail(scene, sprites.tailGroundGrass, i, j);
+  //     }
+  //   }
+  // }
   
   createPlayer(scene, state, 2, yMedian - 2);
 
