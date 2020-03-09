@@ -9,6 +9,8 @@ const medianY = verticalCount / 2;
 
 export interface IBlock {
   map: string;
+  minX?: number;
+  maxX?: number;
   minY?: number;
   maxY?: number;
   slotFilterTop?: slots[];
@@ -33,6 +35,30 @@ export const blocks: IBlock[] = [
     --------
     `,
     minY: 0,
+    maxY: medianY - 1,
+    slotBottom: slots.air,
+    slotRight: slots.air,
+  },
+  {
+    map: `
+    --------
+    ggg--ggg
+    --------
+    --------
+    `,
+    minY: medianY - 4,
+    maxY: medianY - 1,
+    slotBottom: slots.air,
+    slotRight: slots.air,
+  },
+  {
+    map: `
+    --------
+    ------gg
+    ---gg---
+    gg------
+    `,
+    minY: medianY - 4,
     maxY: medianY - 1,
     slotBottom: slots.air,
     slotRight: slots.air,
@@ -88,6 +114,7 @@ export const blocks: IBlock[] = [
     `,
     minY: medianY,
     maxY: verticalCount,
+    minX: 8,
     slotBottom: slots.ground,
     slotRight: slots.ground,
     slotFilterTop: [slots.groundHole, slots.air],
@@ -102,6 +129,7 @@ export const blocks: IBlock[] = [
     `,
     minY: medianY,
     maxY: verticalCount,
+    minX: 8,
     slotBottom: slots.ground,
     slotRight: slots.ground,
     slotFilterTop: [slots.ground, slots.air],
@@ -116,6 +144,7 @@ export const blocks: IBlock[] = [
     `,
     minY: medianY,
     maxY: verticalCount,
+    minX: 8,
     slotBottom: slots.ground,
     slotRight: slots.groundHole,
     slotFilterTop: [slots.air],
@@ -142,7 +171,8 @@ export function createBlock(scene: Phaser.Scene, block: IBlock, startX: number, 
 export function createRandomBlock(scene: Phaser.Scene, startX: number, startY: number, leftBlock: IBlock | null, topBlock: IBlock | null) {
   const matchingBlocks = blocks.filter(block => {
     return (
-      block.minY <= startY && block.maxY >= startY &&
+      (block.minY || 0) <= startY && (block.maxY || startY) >= startY &&
+      (block.minX || 0) <= startX && (block.maxX || startX) >= startX &&
       (topBlock && block.slotFilterTop ? block.slotFilterTop.includes(topBlock.slotBottom) : true) &&
       (leftBlock && block.slotFilterLeft ? block.slotFilterLeft.includes(leftBlock.slotRight) : true)
     );

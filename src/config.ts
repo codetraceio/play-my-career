@@ -3,5 +3,6 @@ export const config = {
   characterSpeed: 2,
   gravity: 4,
   verticalCount: 22,
-  horizontalCount: 1000,
+  horizontalCount: 500,
+  jumpTimeout: 100,
 };

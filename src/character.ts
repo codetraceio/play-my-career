@@ -86,8 +86,18 @@ export function movePlayer(scene: Phaser.Scene, state: IState) {
     }
   }
 
-  if (cursors.up.isDown && player.body.touching.down) {
+  if (cursors.up.isDown && ( player.body.touching.down || state.jumps < 1 && !state.upPressed )) {
+    state.jumps++;
+    state.upPressed = true;
     player.setVelocityY(-540);
+  }
+
+  if (!cursors.up.isDown) {
+    state.upPressed = false;
+  }
+
+  if (player.body.touching.down) {
+    state.jumps = 0;
   }
 }
 
