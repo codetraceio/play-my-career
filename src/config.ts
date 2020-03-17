@@ -5,4 +5,5 @@ export const config = {
   verticalCount: 22,
   horizontalCount: 500,
   jumpTimeout: 100,
+  immunityDelta: 1000,
 };

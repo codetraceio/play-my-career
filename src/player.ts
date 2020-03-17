@@ -1,11 +1,12 @@
 import * as Phaser from "phaser";
 import { sprites } from "./sprites";
 import { config } from "./config";
-import { IState } from "./state";
+import { IState, state } from "./state";
 import { animations } from "./animations";
 import { direction } from "./constants";
+import { world } from "./world";
 
-export function createPlayer(scene: Phaser.Scene, state: IState, x: number, y: number) {
+export function createPlayer(scene: Phaser.Scene, x: number, y: number) {
   const size = config.tailSize;
   const player = (
     scene.physics.add
@@ -15,8 +16,6 @@ export function createPlayer(scene: Phaser.Scene, state: IState, x: number, y: n
   );
 
   player.setCollideWorldBounds(true);
-  scene.physics.add.collider(player, state.platforms);
-  state.player = player;
   
   scene.anims.create({
     key: animations.walkRight,
@@ -60,11 +59,12 @@ export function createPlayer(scene: Phaser.Scene, state: IState, x: number, y: n
     repeat: -1,
   });
 
+  return player;
 }
 
-export function movePlayer(scene: Phaser.Scene, state: IState) {
+export function movePlayer(scene: Phaser.Scene) {
   const cursors = scene.input.keyboard.createCursorKeys();
-  const player = state.player;
+  const player = world.player;
 
   if (cursors.left.isDown) {
     player.setVelocityX(-160);
@@ -99,5 +99,11 @@ export function movePlayer(scene: Phaser.Scene, state: IState) {
   if (player.body.touching.down) {
     state.jumps = 0;
   }
-}
 
+  const immunityDelta =  Date.now() - state.playerImmunityTimestamp;
+  if (immunityDelta < 1000) {
+    player.setAlpha(immunityDelta % 250 / 250);
+  } else {
+    player.setAlpha(1);
+  }
+}

@@ -1,14 +1,15 @@
 import * as Phaser from "phaser";
-import { sprites } from "./sprites";
 import { config } from "./config";
-import { IState, state } from "./state";
 
-export function createTail(scene: Phaser.Scene, tail: string, x: number, y: number) {
+export function createTail(platforms: Phaser.Physics.Arcade.StaticGroup, tail: string, x: number, y: number, halfHeight: boolean = false): Phaser.Physics.Arcade.Sprite {
   const size = config.tailSize;
+  const height = halfHeight ? size / 2 : size;
+  const yPosition = halfHeight ? size / 2 + height / 2 + y * size : size / 2 + y * size;
   return (
-    state.platforms
-    .create(size / 2 + x * size, size / 2 + y * size, tail)
-    .setSize(size, size)
-    .setDisplaySize(size, size)
+    platforms
+    .create(size / 2 + x * size, yPosition, tail)
+    .setSize(size, height)
+    .setDisplaySize(size, height)
+    .setDepth(1)
   );
 }

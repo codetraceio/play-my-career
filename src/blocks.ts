@@ -3,6 +3,8 @@ import { createTail } from "./tail";
 import { sprites } from "./sprites";
 import { getRandomIntager } from "./util";
 import { config } from "./config";
+import { IWorld } from "./world";
+import { objects, objectKeys } from "./objects";
 
 const verticalCount = config.verticalCount;
 const medianY = verticalCount / 2;
@@ -54,9 +56,21 @@ export const blocks: IBlock[] = [
   {
     map: `
     --------
-    ------gg
     ---gg---
-    gg------
+    --------
+    --------
+    `,
+    minY: medianY - 4,
+    maxY: medianY - 1,
+    slotBottom: slots.air,
+    slotRight: slots.air,
+  },
+  {
+    map: `
+    --------
+    --------
+    --------
+    --?--?--
     `,
     minY: medianY - 4,
     maxY: medianY - 1,
@@ -94,8 +108,22 @@ export const blocks: IBlock[] = [
   {
     map: `
     ggg--ggg
+    ggg--ggg
+    ggg--ggg
+    ggg??ggg
+    `,
+    minY: medianY,
+    maxY: verticalCount,
+    slotBottom: slots.ground,
+    slotRight: slots.ground,
+    slotFilterTop: [slots.groundHole, slots.air],
+    slotFilterLeft: [slots.ground],
+  },
+  {
+    map: `
+    ggg--ggg
     ggg-----
-    ggg-----
+    ggg?----
     gggggggg
     `,
     minY: medianY,
@@ -109,7 +137,7 @@ export const blocks: IBlock[] = [
     map: `
     ggg--ggg
     -----ggg
-    -----ggg
+    ----?ggg
     gggggggg
     `,
     minY: medianY,
@@ -157,18 +185,26 @@ const spriteMap: Record<string, sprites> = {
   'g': sprites.tailGroundGrass,
 }
 
-export function createBlock(scene: Phaser.Scene, block: IBlock, startX: number, startY: number) {
+export function createBlock(world: IWorld, block: IBlock, startX: number, startY: number) {
   block.map.replace(/[\r ]+/g, '').split('\n').forEach((row, j) => {
     row.split('').forEach((key, i) => {
+      const x = startX + i;
+      const y = startY + j;
+      if (key === '?') {
+        const object = objects[objectKeys[getRandomIntager(0, objectKeys.length)]];
+        if (object.sprite) {
+          createTail(world.enemies, sprites.spikes, x, y, true);
+        }
+      }
       const sprite = spriteMap[key];
       if (sprite) {
-        createTail(scene, sprite, startX + i, startY + j);
+        createTail(world.platforms, sprite, x, y);
       }
     });
   });
 }
 
-export function createRandomBlock(scene: Phaser.Scene, startX: number, startY: number, leftBlock: IBlock | null, topBlock: IBlock | null) {
+export function createRandomBlock(world: IWorld, startX: number, startY: number, leftBlock: IBlock | null, topBlock: IBlock | null) {
   const matchingBlocks = blocks.filter(block => {
     return (
       (block.minY || 0) <= startY && (block.maxY || startY) >= startY &&
@@ -180,7 +216,7 @@ export function createRandomBlock(scene: Phaser.Scene, startX: number, startY: n
   const random = getRandomIntager(0, matchingBlocks.length);
   const block = matchingBlocks[random];
   if (block) {
-    createBlock(scene, block, startX, startY);
+    createBlock(world, block, startX, startY);
   }
   return block;
 }
