@@ -1,13 +1,13 @@
 export interface IWorld {
-  platforms: Phaser.Physics.Arcade.StaticGroup;
-  enemies: Phaser.Physics.Arcade.StaticGroup;
-  player: Phaser.Physics.Arcade.Sprite;
+  platformCatergory: number;
+  enemyCategory: number;
+  player: Phaser.Physics.Matter.Image;
   camera: Phaser.Cameras.Scene2D.Camera;
 }
 
 export const world: IWorld = {
-  platforms: null,
-  enemies: null,
+  platformCatergory: 0,
+  enemyCategory: 0,
   player: null,
   camera: null,
 };

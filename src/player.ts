@@ -5,17 +5,20 @@ import { IState, state } from "./state";
 import { animations } from "./animations";
 import { direction } from "./constants";
 import { world } from "./world";
+import { IScene } from "./interfaces/IScene";
 
-export function createPlayer(scene: Phaser.Scene, x: number, y: number) {
+export function createPlayer(scene: IScene, x: number, y: number) {
   const size = config.tailSize;
   const player = (
-    scene.physics.add
+    scene.matter.add
     .sprite(size / 2 + x * size, y * size, sprites.characterAlienGreen)
-    .setSize(size * .6, size * 1.5)
-    .setDisplaySize(size, size * 1.5)
   );
 
-  player.setCollideWorldBounds(true);
+  player.setRectangle(40, 96);
+
+  player.setFixedRotation();
+
+  // player.setCollideWorldBounds(true);
   
   scene.anims.create({
     key: animations.walkRight,
@@ -62,43 +65,43 @@ export function createPlayer(scene: Phaser.Scene, x: number, y: number) {
   return player;
 }
 
-export function movePlayer(scene: Phaser.Scene) {
+export function movePlayer(scene: IScene) {
   const cursors = scene.input.keyboard.createCursorKeys();
   const player = world.player;
 
   if (cursors.left.isDown) {
-    player.setVelocityX(-160);
-    player.anims.play(player.body.touching.down ? animations.walkLeft : animations.flyLeft, true);
+    player.setVelocityX(-10);
+    //player.anims.play(player.body.touching.down ? animations.walkLeft : animations.flyLeft, true);
 
     state.direction = direction.left;
   } else if (cursors.right.isDown) {
-    player.setVelocityX(160);
+    player.setVelocityX(10);
 
-    player.anims.play(player.body.touching.down ? animations.walkRight : animations.flyRight, true);
+    //player.anims.play(player.body.touching.down ? animations.walkRight : animations.flyRight, true);
     state.direction = direction.right;
   } else {
     player.setVelocityX(0);
 
-    if (player.body.touching.down) {
-      player.anims.play(state.direction === direction.left ? animations.lookLeft : animations.lookRight, true);
-    } else {
-      player.anims.play(state.direction === direction.left ? animations.flyLeft : animations.flyRight, true);
-    }
+    // if (player.body.touching.down) {
+    //   player.anims.play(state.direction === direction.left ? animations.lookLeft : animations.lookRight, true);
+    // } else {
+    //   player.anims.play(state.direction === direction.left ? animations.flyLeft : animations.flyRight, true);
+    // }
   }
 
-  if (cursors.up.isDown && ( player.body.touching.down || state.jumps < 1 && !state.upPressed )) {
-    state.jumps++;
-    state.upPressed = true;
-    player.setVelocityY(-540);
-  }
+  // if (cursors.up.isDown && ( player.body.touching.down || state.jumps < 1 && !state.upPressed )) {
+  //   state.jumps++;
+  //   state.upPressed = true;
+  //   player.setVelocityY(-540);
+  // }
 
   if (!cursors.up.isDown) {
     state.upPressed = false;
   }
 
-  if (player.body.touching.down) {
-    state.jumps = 0;
-  }
+  // if (player.body.touching.down) {
+  //   state.jumps = 0;
+  // }
 
   const immunityDelta =  Date.now() - state.playerImmunityTimestamp;
   if (immunityDelta < 1000) {

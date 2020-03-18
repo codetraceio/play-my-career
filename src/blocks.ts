@@ -3,8 +3,9 @@ import { createTail } from "./tail";
 import { sprites } from "./sprites";
 import { getRandomIntager } from "./util";
 import { config } from "./config";
-import { IWorld } from "./world";
+import { IWorld, world } from "./world";
 import { objects, objectKeys } from "./objects";
+import { IScene } from "./interfaces/IScene";
 
 const verticalCount = config.verticalCount;
 const medianY = verticalCount / 2;
@@ -185,7 +186,7 @@ const spriteMap: Record<string, sprites> = {
   'g': sprites.tailGroundGrass,
 }
 
-export function createBlock(world: IWorld, block: IBlock, startX: number, startY: number) {
+export function createBlock(scene: IScene, block: IBlock, startX: number, startY: number) {
   block.map.replace(/[\r ]+/g, '').split('\n').forEach((row, j) => {
     row.split('').forEach((key, i) => {
       const x = startX + i;
@@ -193,18 +194,18 @@ export function createBlock(world: IWorld, block: IBlock, startX: number, startY
       if (key === '?') {
         const object = objects[objectKeys[getRandomIntager(0, objectKeys.length)]];
         if (object.sprite) {
-          createTail(world.enemies, sprites.spikes, x, y, true);
+          createTail(scene, world.enemyCategory, sprites.spikes, x, y, true);
         }
       }
       const sprite = spriteMap[key];
       if (sprite) {
-        createTail(world.platforms, sprite, x, y);
+        createTail(scene, world.platformCatergory, sprite, x, y);
       }
     });
   });
 }
 
-export function createRandomBlock(world: IWorld, startX: number, startY: number, leftBlock: IBlock | null, topBlock: IBlock | null) {
+export function createRandomBlock(scene: IScene, startX: number, startY: number, leftBlock: IBlock | null, topBlock: IBlock | null) {
   const matchingBlocks = blocks.filter(block => {
     return (
       (block.minY || 0) <= startY && (block.maxY || startY) >= startY &&
@@ -216,7 +217,7 @@ export function createRandomBlock(world: IWorld, startX: number, startY: number,
   const random = getRandomIntager(0, matchingBlocks.length);
   const block = matchingBlocks[random];
   if (block) {
-    createBlock(world, block, startX, startY);
+    createBlock(scene, block, startX, startY);
   }
   return block;
 }

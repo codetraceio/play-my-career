@@ -1,16 +1,17 @@
 import Phaser from "phaser";
 import { sprites } from "./sprites";
+import { IScene } from "./interfaces/IScene";
 
 const maxLifes = 3;
 let lifeCount = 3;
 const lifes: Phaser.GameObjects.Sprite[] = [];
 
-function createLife(scene: Phaser.Scene, position: number) {
+function createLife(scene: IScene, position: number) {
   const space = 12;
   return scene.add.sprite(32 + 32 * (position + 1) + position * space, 32, sprites.coffee).setScrollFactor(0, 0).setDepth(100);
 }
 
-export function createLifes(scene: Phaser.Scene) {
+export function createLifes(scene: IScene) {
   for (let i = 0; i < maxLifes; i++) {
     const life = createLife(scene, i);
     lifes.push(life);
