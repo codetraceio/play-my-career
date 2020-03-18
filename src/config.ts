@@ -6,4 +6,5 @@ export const config = {
   horizontalCount: 500,
   jumpTimeout: 100,
   immunityDelta: 1000,
+  touchDelta: 300,
 };

@@ -66,13 +66,32 @@ export function movePlayer(scene: Phaser.Scene) {
   const cursors = scene.input.keyboard.createCursorKeys();
   const player = world.player;
 
+  if (player.body.touching.down) {
+    state.jumps = 0;
+    state.horizontalTouchDirection = direction.none;
+  }
+
   if (cursors.left.isDown) {
-    player.setVelocityX(-160);
+    if (!player.body.touching.down && player.body.touching.left) {
+      state.touchedLeftTimestamp = Date.now();
+      if (state.horizontalTouchDirection !== direction.left) {
+        state.jumps = 0;
+      }
+      state.horizontalTouchDirection = direction.left;
+    }
+    player.setVelocityX(Date.now() - state.touchedLeftTimestamp < config.touchDelta ? 160 : -160);
     player.anims.play(player.body.touching.down ? animations.walkLeft : animations.flyLeft, true);
 
     state.direction = direction.left;
   } else if (cursors.right.isDown) {
-    player.setVelocityX(160);
+    if (!player.body.touching.down && player.body.touching.right) {
+      state.touchedRightTimestamp = Date.now();
+      if (state.horizontalTouchDirection !== direction.right) {
+        state.jumps = 0;
+      }
+      state.horizontalTouchDirection = direction.right;
+    }
+    player.setVelocityX(Date.now() - state.touchedRightTimestamp < config.touchDelta ? -160 : 160);
 
     player.anims.play(player.body.touching.down ? animations.walkRight : animations.flyRight, true);
     state.direction = direction.right;
@@ -96,11 +115,7 @@ export function movePlayer(scene: Phaser.Scene) {
     state.upPressed = false;
   }
 
-  if (player.body.touching.down) {
-    state.jumps = 0;
-  }
-
-  const immunityDelta =  Date.now() - state.playerImmunityTimestamp;
+  const immunityDelta =  Date.now() - state.immunityTimestamp;
   if (immunityDelta < 1000) {
     player.setAlpha(immunityDelta % 250 / 250);
   } else {

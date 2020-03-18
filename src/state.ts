@@ -7,7 +7,10 @@ export interface IState {
   jumps: number;
   upPressed: boolean;
   map: Map<string, IBlock>;
-  playerImmunityTimestamp: number;
+  immunityTimestamp: number;
+  touchedLeftTimestamp: number;
+  touchedRightTimestamp: number;
+  horizontalTouchDirection: direction;
 };
 
 export const state: IState = {
@@ -15,5 +18,8 @@ export const state: IState = {
   jumps: 0,
   upPressed: false,
   map: new Map(),
-  playerImmunityTimestamp: Date.now(),
+  immunityTimestamp: 0,
+  touchedLeftTimestamp: 0,
+  touchedRightTimestamp: 0,
+  horizontalTouchDirection: direction.none,
 };

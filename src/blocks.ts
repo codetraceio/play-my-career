@@ -79,6 +79,18 @@ export const blocks: IBlock[] = [
   },
   {
     map: `
+    --------
+    --------
+    g------g
+    gg----gg
+    `,
+    minY: medianY - 4,
+    maxY: medianY - 1,
+    slotBottom: slots.air,
+    slotRight: slots.air,
+  },
+  {
+    map: `
     gggggggg
     gggggggg
     gggggggg

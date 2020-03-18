@@ -53,14 +53,14 @@ function create(scene: Phaser.Scene) {
   
   const player = createPlayer(scene, 2, yMedian - 2);
   world.player = player;
-  state.playerImmunityTimestamp = Date.now();
+  state.immunityTimestamp = Date.now();
 
   scene.physics.add.collider(player, world.platforms);
   scene.physics.add.collider(player, world.enemies, (a: Phaser.Physics.Arcade.Sprite, b: Phaser.Physics.Arcade.Sprite) => {
-    if (Date.now() - state.playerImmunityTimestamp < config.immunityDelta) {
+    if (Date.now() - state.immunityTimestamp < config.immunityDelta) {
       return;
     }
-    state.playerImmunityTimestamp = Date.now();
+    state.immunityTimestamp = Date.now();
     removeLife();
   });
   camera.startFollow(world.player);
