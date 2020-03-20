@@ -1,4 +1,3 @@
-import { IState } from "./state";
 import { createTail } from "./tail";
 import { sprites } from "./sprites";
 
@@ -8,6 +7,7 @@ export function createBorders(platforms: Phaser.Physics.Arcade.StaticGroup,  hor
     createTail(platforms, sprites.tailBrick, horizontalCount - 1, i);
   }
   for (let i = 0; i < horizontalCount; i++) {
+    createTail(platforms, sprites.tailBrick, i, 0);
     createTail(platforms, sprites.tailBrick, i, verticalCount - 1);
   }
 }

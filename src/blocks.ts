@@ -1,5 +1,5 @@
 import * as Phaser from "phaser";
-import { createTail } from "./tail";
+import { createTail, createPlatform } from "./tail";
 import { sprites } from "./sprites";
 import { getRandomIntager } from "./util";
 import { config } from "./config";
@@ -44,7 +44,7 @@ export const blocks: IBlock[] = [
   {
     map: `
     --------
-    ggg--ggg
+    sss--sss
     --------
     --------
     `,
@@ -56,7 +56,7 @@ export const blocks: IBlock[] = [
   {
     map: `
     --------
-    ---gg---
+    ---ss---
     --------
     --------
     `,
@@ -81,13 +81,27 @@ export const blocks: IBlock[] = [
     map: `
     --------
     --------
-    g------g
-    gg----gg
+    s------s
+    gss--ssg
     `,
     minY: medianY - 4,
     maxY: medianY - 1,
-    slotBottom: slots.air,
+    slotBottom: slots.groundHole,
     slotRight: slots.air,
+  },
+  {
+    map: `
+    ssssssss
+    gggggggg
+    gggggggg
+    gggggggg
+    `,
+    minY: medianY,
+    maxY: verticalCount,
+    slotBottom: slots.ground,
+    slotRight: slots.ground,
+    slotFilterTop: [slots.air],
+    slotFilterLeft: [slots.ground],
   },
   {
     map: `
@@ -100,7 +114,21 @@ export const blocks: IBlock[] = [
     maxY: verticalCount,
     slotBottom: slots.ground,
     slotRight: slots.ground,
-    slotFilterTop: [slots.ground, slots.groundHole, slots.air],
+    slotFilterTop: [slots.ground, slots.groundHole],
+    slotFilterLeft: [slots.ground],
+  },
+  {
+    map: `
+    sss--sss
+    ggg--ggg
+    ggg--ggg
+    ggg--ggg
+    `,
+    minY: medianY,
+    maxY: verticalCount,
+    slotBottom: slots.groundHole,
+    slotRight: slots.ground,
+    slotFilterTop: [slots.air],
     slotFilterLeft: [slots.ground],
   },
   {
@@ -114,21 +142,49 @@ export const blocks: IBlock[] = [
     maxY: verticalCount,
     slotBottom: slots.groundHole,
     slotRight: slots.ground,
-    slotFilterTop: [slots.groundHole, slots.air],
+    slotFilterTop: [slots.groundHole],
+    slotFilterLeft: [slots.ground],
+  },
+  {
+    map: `
+    sss--sss
+    ggg--ggg
+    ggg??ggg
+    gggssggg
+    `,
+    minY: medianY,
+    maxY: verticalCount,
+    slotBottom: slots.ground,
+    slotRight: slots.ground,
+    slotFilterTop: [slots.air],
     slotFilterLeft: [slots.ground],
   },
   {
     map: `
     ggg--ggg
     ggg--ggg
-    ggg--ggg
     ggg??ggg
+    gggssggg
     `,
     minY: medianY,
     maxY: verticalCount,
     slotBottom: slots.ground,
     slotRight: slots.ground,
-    slotFilterTop: [slots.groundHole, slots.air],
+    slotFilterTop: [slots.groundHole],
+    slotFilterLeft: [slots.ground],
+  },
+  {
+    map: `
+    sss--sss
+    ggg-----
+    ggg?----
+    gggsssss
+    `,
+    minY: medianY,
+    maxY: verticalCount,
+    slotBottom: slots.ground,
+    slotRight: slots.groundHole,
+    slotFilterTop: [slots.air],
     slotFilterLeft: [slots.ground],
   },
   {
@@ -136,51 +192,81 @@ export const blocks: IBlock[] = [
     ggg--ggg
     ggg-----
     ggg?----
-    gggggggg
+    gggsssss
     `,
     minY: medianY,
     maxY: verticalCount,
     slotBottom: slots.ground,
     slotRight: slots.groundHole,
-    slotFilterTop: [slots.groundHole, slots.air],
+    slotFilterTop: [slots.groundHole],
     slotFilterLeft: [slots.ground],
+  },
+  {
+    map: `
+    sss--sss
+    -----ggg
+    ----?ggg
+    sssssggg
+    `,
+    minY: medianY,
+    maxY: verticalCount,
+    minX: 8,
+    slotBottom: slots.ground,
+    slotRight: slots.ground,
+    slotFilterTop: [slots.air],
+    slotFilterLeft: [slots.groundHole, slots.ground],
   },
   {
     map: `
     ggg--ggg
     -----ggg
     ----?ggg
-    gggggggg
+    sssssggg
     `,
     minY: medianY,
     maxY: verticalCount,
     minX: 8,
     slotBottom: slots.ground,
     slotRight: slots.ground,
-    slotFilterTop: [slots.groundHole, slots.air],
+    slotFilterTop: [slots.groundHole],
     slotFilterLeft: [slots.groundHole, slots.ground],
   },
   {
     map: `
-    gggggggg
+    ssssssss
     -----ggg
     -----ggg
-    gggggggg
+    sssssggg
     `,
     minY: medianY,
     maxY: verticalCount,
     minX: 8,
     slotBottom: slots.ground,
     slotRight: slots.ground,
-    slotFilterTop: [slots.ground, slots.air],
+    slotFilterTop: [slots.air],
     slotFilterLeft: [slots.groundHole],
   },
   {
     map: `
-    g-g--g-g
-    --------
-    --------
     gggggggg
+    -----ggg
+    -----ggg
+    sssssggg
+    `,
+    minY: medianY,
+    maxY: verticalCount,
+    minX: 8,
+    slotBottom: slots.ground,
+    slotRight: slots.ground,
+    slotFilterTop: [slots.ground],
+    slotFilterLeft: [slots.groundHole],
+  },
+  {
+    map: `
+    s-s--s-s
+    --------
+    --------
+    ssssssss
     `,
     minY: medianY,
     maxY: verticalCount,
@@ -192,25 +278,31 @@ export const blocks: IBlock[] = [
   },
 ];
 
-const spriteMap: Record<string, sprites> = {
+const spriteMap: Record<string, (world: IWorld, x: number, y: number) => Phaser.Physics.Arcade.Sprite> = {
   '-': null,
-  'g': sprites.tailGroundGrass,
-}
+  '?': (world: IWorld, x: number, y: number) => {
+    const object = objects[objectKeys[getRandomIntager(0, objectKeys.length)]];
+    if (object.sprite) {
+      return createTail(world.enemies, sprites.spikes, x, y, true);
+    }
+    return null;
+  },
+  'g': (world: IWorld, x: number, y: number) => {
+    return createPlatform(world.platforms, sprites.tailGrass, x, y);
+  },
+  's': (world: IWorld, x: number, y: number) => {
+    return createTail(world.platforms, sprites.tailGrass, x, y, false, 1);
+  },
+};
 
-export function createBlock(world: IWorld, block: IBlock, startX: number, startY: number) {
+export function createBlock(world: IWorld, block: IBlock, startX: number, startY: number, leftBlock: IBlock | null, topBlock: IBlock | null) {
   block.map.replace(/[\r ]+/g, '').split('\n').forEach((row, j) => {
     row.split('').forEach((key, i) => {
       const x = startX + i;
-      const y = startY + j;
-      if (key === '?') {
-        const object = objects[objectKeys[getRandomIntager(0, objectKeys.length)]];
-        if (object.sprite) {
-          createTail(world.enemies, sprites.spikes, x, y, true);
-        }
-      }
-      const sprite = spriteMap[key];
-      if (sprite) {
-        createTail(world.platforms, sprite, x, y);
+      const y = startY + j - 1;
+      const spriteFunc = spriteMap[key];
+      if (spriteFunc) {
+        spriteFunc(world, x, y);
       }
     });
   });
@@ -228,7 +320,7 @@ export function createRandomBlock(world: IWorld, startX: number, startY: number,
   const random = getRandomIntager(0, matchingBlocks.length);
   const block = matchingBlocks[random];
   if (block) {
-    createBlock(world, block, startX, startY);
+    createBlock(world, block, startX, startY, leftBlock, topBlock);
   }
   return block;
 }

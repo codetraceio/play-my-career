@@ -1,7 +1,7 @@
 import * as Phaser from "phaser";
 import { sprites } from "./sprites";
 import { config } from "./config";
-import { IState, state } from "./state";
+import { state } from "./state";
 import { animations } from "./animations";
 import { direction } from "./constants";
 import { world } from "./world";

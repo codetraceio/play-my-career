@@ -1,5 +1,5 @@
 export enum sprites {
-  tailGroundGrass = "tail-ground-grass",
+  tailGrass = "tail-grass",
   tailBrick = "tail-brick",
   characterAlienGreen = "character-alien-green",
   spikes = "spikes",
@@ -8,4 +8,5 @@ export enum sprites {
 
 export const spritesheet: Record<string, [number, number]> = {
   [sprites.characterAlienGreen]:  [64, 96],
+  [sprites.tailGrass]:  [64, 64],
 };

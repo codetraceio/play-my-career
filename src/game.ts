@@ -1,19 +1,15 @@
 import * as Phaser from "phaser";
-import Slopes from "phaser-slopes";
 import { sprites, spritesheet } from "./sprites";
 import { config } from "./config";
 import { createPlayer, movePlayer } from "./player";
 import { state } from "./state";
 import { createBorders } from "./borders";
 import { createRandomBlock } from "./blocks";
-import { createTail } from "./tail";
 import { createLifes, setLifes, removeLife } from "./lifes";
 import { world } from "./world";
 
 
 function preload(scene: Phaser.Scene) {
-  console.log(Slopes);
-  
   Object.values(sprites).forEach((key) => {
     if (spritesheet[key]) {
       const value = spritesheet[key];
@@ -25,7 +21,6 @@ function preload(scene: Phaser.Scene) {
       scene.load.image(key, `images/${key}.png`);
     }
   });
-  scene.load.scenePlugin('Slopes', Slopes);
 }
 
 function create(scene: Phaser.Scene) {

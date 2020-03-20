@@ -1,4 +1,3 @@
-import * as Phaser from "phaser";
 import { direction } from "./constants";
 import { IBlock } from "./blocks";
 
